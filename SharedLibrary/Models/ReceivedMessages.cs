@@ -1,21 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.ApplicationModel.Appointments.AppointmentsProvider;
+﻿using System.Collections.ObjectModel;
 
 namespace SharedLibrary.Models
 {
     public class ReceivedMessages : ObservableCollection<ReceivedMessageModel>
     {
-        public ReceivedMessages(int n)
+        public ReceivedMessages()
         {
-            for (int i = 0; i < n; i++)
-            {
+            for (int i = 0; i < 3; i++)
                 Add(new ReceivedMessageModel("UWPApp", $"Hejsan svejsan{i}"));
-            }
         }
     }
 }

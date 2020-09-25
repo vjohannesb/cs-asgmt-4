@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace SharedLibrary.Models
+namespace UWPApp.Models
 {
-    public class ReceivedMessageModel
+    class ReceivedMessageModel
     {
         public ReceivedMessageModel(string targetdeviceid, string message)
         {
@@ -20,4 +24,5 @@ namespace SharedLibrary.Models
         public string Message { get; set; }
         public string DateTimeReceived { get; set; }
     }
+}
 }

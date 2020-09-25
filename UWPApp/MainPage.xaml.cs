@@ -1,18 +1,11 @@
-﻿using SharedLibrary.Models;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+﻿using Microsoft.Azure.Devices.Client;
+using SharedLibrary.Models;
+using SharedLibrary.Services;
+using System.Threading.Tasks;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -30,21 +23,42 @@ namespace UWPApp
 {
     public sealed partial class MainPage : Page
     {
+        private static readonly DeviceClient deviceClient =
+            DeviceClient.CreateFromConnectionString(Config.IotDeviceConnectionString, TransportType.Mqtt);
 
-        public ReceivedMessages receivedMessages = new ReceivedMessages(5);
+        SolidColorBrush whiteColor = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
+        SolidColorBrush blackColor = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
+
+        WeatherModel weatherModel = new WeatherModel();
+        TemperatureModel temperatureModel = new TemperatureModel(0d, 0d);
+
+        public ReceivedMessages receivedMessages = new ReceivedMessages();
 
         public MainPage()
         {
             this.InitializeComponent();
+
+            DeviceService.ReceiveMessageAsync(deviceClient, UpdateReceivedMessagesList).GetAwaiter();
         }
 
-        private void btnSendMessage_Click(object sender, RoutedEventArgs e)
+        public void UpdateReceivedMessagesList(ReceivedMessageModel receivedMessage)
         {
-
+            receivedMessages.Add(receivedMessage);
         }
 
-        private void btnUpdateData_Click(object sender, RoutedEventArgs e)
+        private void btnSendMessage_Click(object sender, RoutedEventArgs e) 
+            => DeviceService.SendMessageAsync(deviceClient).GetAwaiter();
+
+        private async void btnUpdateData_Click(object sender, RoutedEventArgs e)
         {
+            tbUpdating.Foreground = blackColor;
+            var weatherData = await WeatherService.FetchWeatherData();
+
+            tbxTemperature.Text = weatherData.main.temp.ToString();
+            tbxHumidity.Text = weatherData.main.humidity.ToString();
+
+            await Task.Delay(1000);
+            tbUpdating.Foreground = whiteColor;
 
         }
 
@@ -57,9 +71,6 @@ namespace UWPApp
         {
             while (receivedMessages.Count > 0)
                 receivedMessages.RemoveAt(0);
-
-            Console.WriteLine($"Objects: {receivedMessages.Count}");
-            Console.WriteLine($"List: {receivedMessages}");
         }
     }
 }

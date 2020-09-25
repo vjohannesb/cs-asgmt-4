@@ -18,7 +18,7 @@
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
+            <RowDefinition Height="0.75*"/>
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
 
@@ -33,7 +33,7 @@
                     <TextBlock Text="Humidity in %" Margin="0, 5" FontSize="24"/>
                     <TextBox x:Name="tbxHumidity"   TabIndex="1" PlaceholderText="0.0" FontSize="24" Padding="10, 5, 50, 5"/>
                 </StackPanel>
-                <Button x:Name="btnUpdateData" Click="btnUpdateData_Click"
+                <Button x:Name="btnUpdateData" Click="btnUpdateData_Click" ToolTipService.ToolTip="Fetch weather data from API"
                 Padding="10" Margin="0, 0, 0, 0" FontSize="18" VerticalAlignment="Bottom">
                     <SymbolIcon Symbol="Refresh" />
                 </Button>
@@ -41,19 +41,12 @@
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" Margin="0, 15" HorizontalAlignment="Center">
-                <!--
-                <Button x:Name="btnUpdateData" Click="btnUpdateData_Click"
-                Padding="10, 15" Margin="0, 0, 0, 0" FontSize="18"
-                Content="Update weather data"/>
-                -->
-
                 <Button x:Name="btnSendMessage" Click="btnSendMessage_Click"
                 Padding="10"  FontSize="18" HorizontalAlignment="Stretch"
                 Content="Send message to IoT Device" TabIndex="2"/>
             </StackPanel>
             
-            <!-- Vill ha auto-storlek men kunna gömma texten, därav Foreground ist för Visibility -->
-            <TextBlock Text="Updating..." HorizontalAlignment="Center" FontSize="24" Foreground="White" />
+            <TextBlock x:Name="tbUpdating" Text="Fetching data from API..." HorizontalAlignment="Center" FontSize="24" Visibility="Collapsed"/>
         </StackPanel>
         
         <StackPanel Grid.Column="0" Grid.Row="1" Margin="15">
