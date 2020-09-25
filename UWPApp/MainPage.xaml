@@ -1,0 +1,95 @@
+﻿<Page
+    x:Class="UWPApp.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:UWPApp"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    
+    d:Width="960" d:Height="540"
+    
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Column="0" Grid.Row="0" Margin="15" >
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <StackPanel Orientation="Vertical" Width="200">
+                    <TextBlock Text="Temperature in C" FontSize="24" Margin="0, 5"/>
+                    <TextBox x:Name="tbxTemperature" TabIndex="0" PlaceholderText="0.0" FontSize="24" Padding="10, 5, 50, 5"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Vertical"  Margin="25, 0" Width="200">
+                    <TextBlock Text="Humidity in %" Margin="0, 5" FontSize="24"/>
+                    <TextBox x:Name="tbxHumidity"   TabIndex="1" PlaceholderText="0.0" FontSize="24" Padding="10, 5, 50, 5"/>
+                </StackPanel>
+                <Button x:Name="btnUpdateData" Click="btnUpdateData_Click"
+                Padding="10" Margin="0, 0, 0, 0" FontSize="18" VerticalAlignment="Bottom">
+                    <SymbolIcon Symbol="Refresh" />
+                </Button>
+                
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Margin="0, 15" HorizontalAlignment="Center">
+                <!--
+                <Button x:Name="btnUpdateData" Click="btnUpdateData_Click"
+                Padding="10, 15" Margin="0, 0, 0, 0" FontSize="18"
+                Content="Update weather data"/>
+                -->
+
+                <Button x:Name="btnSendMessage" Click="btnSendMessage_Click"
+                Padding="10"  FontSize="18" HorizontalAlignment="Stretch"
+                Content="Send message to IoT Device" TabIndex="2"/>
+            </StackPanel>
+            
+            <!-- Vill ha auto-storlek men kunna gömma texten, därav Foreground ist för Visibility -->
+            <TextBlock Text="Updating..." HorizontalAlignment="Center" FontSize="24" Foreground="White" />
+        </StackPanel>
+        
+        <StackPanel Grid.Column="0" Grid.Row="1" Margin="15">
+            <TextBlock Text="Sent messages" FontSize="18"  FontWeight="Bold" />
+            <ListView x:Name="lvSentMessages"/>
+        </StackPanel>
+
+        <Rectangle Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" HorizontalAlignment="Right" VerticalAlignment="Stretch" Width="1" Margin="2" Stroke="#7F6C6C6C" />
+
+        <StackPanel Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Margin="15">
+            <TextBlock Text="Messages received (Azure HTTP Trigger)" FontSize="18"  FontWeight="Bold"/>
+
+            <ListView x:Name="lvReceivedMessages" ItemsSource="{x:Bind receivedMessages}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Margin="0, 10, 0, 10">
+                            <TextBlock FontSize="14" FontWeight="Bold" Text="{Binding TargetDeviceId}" ToolTipService.ToolTip="Target Device Id" />
+                            <TextBlock FontSize="14" TextWrapping="Wrap" Text="{Binding Message}" ToolTipService.ToolTip="Message received"/>
+                            <TextBlock FontSize="14" Foreground="Gray" Text="{Binding DateTimeReceived}" ToolTipService.ToolTip="Time received"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+            
+        </StackPanel>
+        <Button x:Name="btnClearReceivedMessages" Click="btnClearReceivedMessages_Click"
+                Grid.Row="1" Grid.Column="1" Margin="0, 20"
+                HorizontalAlignment="Center" VerticalAlignment="Bottom"
+                 Content="Clear" ToolTipService.ToolTip="Clear list of received messages"/>
+
+        <Button x:Name="btnClearSentMessages" Click="btnClearSentMessages_Click"
+                Grid.Row="1" Grid.Column="0" Margin="0, 20"
+                HorizontalAlignment="Center" VerticalAlignment="Bottom"
+                 Content="Clear" ToolTipService.ToolTip="Clear list of sent messages"/>
+
+
+    </Grid>
+</Page>
