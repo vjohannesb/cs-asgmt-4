@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace UWPApp.Models
+﻿
+namespace SharedLibrary.Models
 {
-    public class WeatherModel
+    public class APIModel
     {
         // Struktur enligt OpenWeatherMaps JSON-respons
         public Main main { get; set; }
@@ -16,6 +11,5 @@ namespace UWPApp.Models
             public double temp { get; set; }
             public double humidity { get; set; }
         }
-
     }
 }

@@ -16,7 +16,7 @@ namespace SharedLibrary.Services
         private static readonly string _baseUrl = "https://api.openweathermap.org/data/2.5/";
         private static readonly string _apiUrl = $"{_baseUrl}weather?q=Örebro,se&units=metric&appid=" + Config.ApiKey;
 
-        public static async Task<WeatherModel> FetchWeatherData()
+        public static async Task<APIModel> FetchWeatherData()
         {
             try
             {
@@ -28,7 +28,7 @@ namespace SharedLibrary.Services
                     try
                     {
                         // Resultat i string/JSON -> WeatherModel
-                        return JsonConvert.DeserializeObject<WeatherModel>(await _response.Content.ReadAsStringAsync());
+                        return JsonConvert.DeserializeObject<APIModel>(await _response.Content.ReadAsStringAsync());
                     }
                     catch (Exception ex)
                     {

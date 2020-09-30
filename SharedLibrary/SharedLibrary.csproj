@@ -121,9 +121,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Config.cs" />
-    <Compile Include="Models\ReceivedMessageModel.cs" />
     <Compile Include="Models\ReceivedMessages.cs" />
-    <Compile Include="Models\TemperatureModel.cs" />
+    <Compile Include="Models\SentMessages.cs" />
+    <Compile Include="Models\APIModel.cs" />
     <Compile Include="Models\WeatherModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\DeviceService.cs" />

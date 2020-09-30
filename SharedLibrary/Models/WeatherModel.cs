@@ -1,16 +1,21 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
 namespace SharedLibrary.Models
 {
-    public class WeatherModel
+    class WeatherModel
     {
-        // Struktur enligt OpenWeatherMaps JSON-respons
-        public Main main { get; set; }
-
-        public class Main
+        public WeatherModel(double? temp, double? hum)
         {
-            public double temp { get; set; }
-            public double humidity { get; set; }
+            Temperature = temp;
+            Humidity = hum;
         }
 
+        // För "snyggare" get
+        public double? Temperature { get; set; }
+        public double? Humidity { get; set; }
     }
 }

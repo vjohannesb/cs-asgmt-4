@@ -18,7 +18,7 @@
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="0.75*"/>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
 
@@ -26,16 +26,20 @@
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                 <StackPanel Orientation="Vertical" Width="200">
                     <TextBlock Text="Temperature in C" FontSize="24" Margin="0, 5"/>
-                    <TextBox x:Name="tbxTemperature" TabIndex="0" PlaceholderText="0.0" FontSize="24" Padding="10, 5, 50, 5"/>
+                    <TextBox x:Name="tbxTemperature" TabIndex="0" PlaceholderText="0.0" IsReadOnly="True" FontSize="24" Padding="10, 5, 50, 5"/>
                 </StackPanel>
 
                 <StackPanel Orientation="Vertical"  Margin="25, 0" Width="200">
                     <TextBlock Text="Humidity in %" Margin="0, 5" FontSize="24"/>
-                    <TextBox x:Name="tbxHumidity"   TabIndex="1" PlaceholderText="0.0" FontSize="24" Padding="10, 5, 50, 5"/>
+                    <TextBox x:Name="tbxHumidity"   TabIndex="1" PlaceholderText="0.0" IsReadOnly="True" FontSize="24" Padding="10, 5, 50, 5"/>
                 </StackPanel>
                 <Button x:Name="btnUpdateData" Click="btnUpdateData_Click" ToolTipService.ToolTip="Fetch weather data from API"
                 Padding="10" Margin="0, 0, 0, 0" FontSize="18" VerticalAlignment="Bottom">
-                    <SymbolIcon Symbol="Refresh" />
+                    <SymbolIcon x:Name="iconRefresh" Symbol="Refresh" ToolTipService.ToolTip="Refresh" >
+                        <SymbolIcon.Projection>
+                            <PlaneProjection RotationZ="0"/>
+                        </SymbolIcon.Projection>
+                    </SymbolIcon>
                 </Button>
                 
             </StackPanel>
@@ -45,38 +49,50 @@
                 Padding="10"  FontSize="18" HorizontalAlignment="Stretch"
                 Content="Send message to IoT Device" TabIndex="2"/>
             </StackPanel>
-            
-            <TextBlock x:Name="tbUpdating" Text="Fetching data from API..." HorizontalAlignment="Center" FontSize="24" Visibility="Collapsed"/>
         </StackPanel>
         
-        <StackPanel Grid.Column="0" Grid.Row="1" Margin="15">
+        <StackPanel Grid.Column="0" Grid.Row="1" Margin="15, 15, 15, 70">
             <TextBlock Text="Sent messages" FontSize="18"  FontWeight="Bold" />
-            <ListView x:Name="lvSentMessages"/>
+            <ListView x:Name="lvSentMessages" ItemsSource="{x:Bind sentMessages}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Margin="0, 10, 0, 10">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock FontSize="14" Text="Temperature: " Margin="0, 0, 5, 0" FontWeight="Bold" />
+                                <TextBlock FontSize="14" Text="{Binding Temperature}" Margin="0, 0, 15, 0" />
+
+                                <TextBlock FontSize="14" Text="Humidity: " FontWeight="Bold" Margin="0, 0, 5, 0"/>
+                                <TextBlock FontSize="14" Text="{Binding Humidity}"/>
+                            </StackPanel>
+                            <TextBlock Text="{Binding DateTimeSent}" Foreground="Gray"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
         </StackPanel>
 
         <Rectangle Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" HorizontalAlignment="Right" VerticalAlignment="Stretch" Width="1" Margin="2" Stroke="#7F6C6C6C" />
 
-        <StackPanel Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Margin="15">
-            <TextBlock Text="Messages received (Azure HTTP Trigger)" FontSize="18"  FontWeight="Bold"/>
+        <StackPanel Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Margin="15, 15, 15, 75">
+            <TextBlock Text="Messages received (Azure HTTP Trigger)" FontSize="18" FontWeight="Bold"/>
 
             <ListView x:Name="lvReceivedMessages" ItemsSource="{x:Bind receivedMessages}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Margin="0, 10, 0, 10">
-                            <TextBlock FontSize="14" FontWeight="Bold" Text="{Binding TargetDeviceId}" ToolTipService.ToolTip="Target Device Id" />
                             <TextBlock FontSize="14" TextWrapping="Wrap" Text="{Binding Message}" ToolTipService.ToolTip="Message received"/>
                             <TextBlock FontSize="14" Foreground="Gray" Text="{Binding DateTimeReceived}" ToolTipService.ToolTip="Time received"/>
                         </StackPanel>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-
-            
         </StackPanel>
+            
+            
         <Button x:Name="btnClearReceivedMessages" Click="btnClearReceivedMessages_Click"
                 Grid.Row="1" Grid.Column="1" Margin="0, 20"
                 HorizontalAlignment="Center" VerticalAlignment="Bottom"
-                 Content="Clear" ToolTipService.ToolTip="Clear list of received messages"/>
+                 Content="Clear" ToolTipService.ToolTip="Clear list of received messages" CommandParameter=""/>
 
         <Button x:Name="btnClearSentMessages" Click="btnClearSentMessages_Click"
                 Grid.Row="1" Grid.Column="0" Margin="0, 20"

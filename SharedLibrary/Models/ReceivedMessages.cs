@@ -1,13 +1,16 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 
 namespace SharedLibrary.Models
 {
-    public class ReceivedMessages : ObservableCollection<ReceivedMessageModel>
+    public class ReceivedMessages : ObservableCollection<ReceivedMessageModel> { }
+
+    public class ReceivedMessageModel
     {
-        public ReceivedMessages()
-        {
-            for (int i = 0; i < 3; i++)
-                Add(new ReceivedMessageModel("UWPApp", $"Hejsan svejsan{i}"));
-        }
+        public ReceivedMessageModel(string message) 
+            => Message = message;
+
+        public string Message { get; set; }
+        public string DateTimeReceived => DateTime.Now.ToString("G");
     }
 }

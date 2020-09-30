@@ -10,43 +10,39 @@ using System.Diagnostics;
 
 namespace SharedLibrary.Services
 {
+    
     public class DeviceService
     {
         // UWP App (Device Client) -> IoT Device
-        public static async Task SendMessageAsync(DeviceClient deviceClient)
+        public static async Task SendMessageAsync(DeviceClient deviceClient, SentMessages sentMessages)
         {
             // Anropa och vänta in resultat från OpenWeatherMap via WeatherService
             var weatherData = await WeatherService.FetchWeatherData();
+            var data = new WeatherModel(weatherData.main.temp, weatherData.main.humidity);
 
-            // "Omformatera" till (nullable) TemperatureModel för en egen struktur
-            var data = new TemperatureModel(temp: weatherData?.main?.temp, hum: weatherData?.main?.humidity);
-
-            // Konvertera till JSON & vidare till bytes (spara json för konsolutskrift) 
+            // Konvertera till JSON & vidare till bytes 
             string json = JsonConvert.SerializeObject(data);
-            var payload = new Message(Encoding.UTF8.GetBytes(json));
 
-            await deviceClient.SendEventAsync(payload);
-
-            // För att inte kunna spamma
-            await Task.Delay(5 * 1000);
+            await deviceClient.SendEventAsync(new Message(Encoding.UTF8.GetBytes(json)));
+            sentMessages.Insert(0, new SentMessageModel(data.Temperature, data.Humidity));
         }
 
         // UWP App <- Azure Function    [Receiver]
-        public static async Task<ReceivedMessageModel> ReceiveMessageAsync(DeviceClient deviceClient, Action<ReceivedMessageModel> updateList)
+        public static async Task ReceiveMessageAsync(DeviceClient deviceClient, ReceivedMessages receivedMessages)
         {
             while (true)
             {
                 // Försök hämta meddelande/"payload" från Azure Function
                 var payload = await deviceClient.ReceiveAsync();
 
-                // Returnera payload (som ReceivedMessage) om det finns innehåll, annars gå vidare till nästa iteration
+                // Uppdatera lista och radera meddelande från kö (om det finns innehåll)
                 if (payload != null)
                 {
-                    Debug.WriteLine("\n-----------------\nMessage received!\n---------------\n");
-                    updateList(JsonConvert.DeserializeObject<ReceivedMessageModel>(Encoding.UTF8.GetString(payload.GetBytes())));
+                    receivedMessages.Insert(0, new ReceivedMessageModel(Encoding.UTF8.GetString(payload.GetBytes())));
                     await deviceClient.CompleteAsync(payload);
                 }
             }
         }
     }
+    
 }
