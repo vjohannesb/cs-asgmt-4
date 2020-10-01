@@ -17,8 +17,7 @@ namespace SharedLibrary.Services
         public static async Task SendMessageAsync(DeviceClient deviceClient, SentMessages sentMessages)
         {
             // Anropa och vänta in resultat från OpenWeatherMap via WeatherService
-            var weatherData = await WeatherService.FetchWeatherData();
-            var data = new WeatherModel(weatherData.main.temp, weatherData.main.humidity);
+            var data = await WeatherService.FetchWeatherData();
 
             // Konvertera till JSON & vidare till bytes 
             string json = JsonConvert.SerializeObject(data);

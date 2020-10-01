@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SharedLibrary.Models
 {
-    class WeatherModel
+    public class WeatherModel
     {
         public WeatherModel(double? temp, double? hum)
         {
@@ -14,7 +14,10 @@ namespace SharedLibrary.Models
             Humidity = hum;
         }
 
-        // För "snyggare" get
+        // Omvandling från API:ns struktur till en egen, för "snyggare" data
+        public static implicit operator WeatherModel(APIModel am)
+            => new WeatherModel(am.main.temp, am.main.humidity);
+
         public double? Temperature { get; set; }
         public double? Humidity { get; set; }
     }

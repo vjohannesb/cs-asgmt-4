@@ -30,8 +30,8 @@ namespace UWPApp
         private async void btnUpdateData_Click(object sender, RoutedEventArgs e)
         {            
             var weatherData = await WeatherService.FetchWeatherData();
-            tbxTemperature.Text = weatherData.main.temp.ToString();
-            tbxHumidity.Text = weatherData.main.humidity.ToString();
+            tbxTemperature.Text = weatherData.Temperature.ToString();
+            tbxHumidity.Text = weatherData.Humidity.ToString();
         }
 
         private void btnClearSentMessages_Click(object sender, RoutedEventArgs e) 

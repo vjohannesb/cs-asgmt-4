@@ -39,7 +39,8 @@ namespace AzureFunction
             message = message ?? data?.Message;
 
             if (string.IsNullOrEmpty(targetDeviceId) || string.IsNullOrEmpty(message))
-                return new BadRequestObjectResult("HTTP triggered function executed, but no target device id or message was supplied. Valid parameters are 'targetdeviceid' & 'message'.");
+                return new BadRequestObjectResult("HTTP triggered function executed, but target device id and/or message was not supplied. "
+                                                  + "Valid parameters are 'targetdeviceid' & 'message'.");
 
             await DeviceService.SendMessageToDeviceAsync(serviceClient, targetDeviceId, message);
             return new OkObjectResult($"HTTP triggered function executed successfully. Message sent to '{targetDeviceId}'.");
